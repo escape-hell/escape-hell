@@ -19,8 +19,14 @@ const Comment = ({ comment }: { comment: CommentType }) => {
 
   const queryKey = useGetCommentList.getKey(level);
 
-  const { mutate: updateComment } = useUpdateComment({ queryKey, commentId: comment.id });
-  const { mutate: deleteComment } = useDeleteComment({ queryKey, commentId: comment.id });
+  const { mutate: updateComment } = useUpdateComment({
+    queryKey,
+    commentId: comment.id,
+  });
+  const { mutate: deleteComment } = useDeleteComment({
+    queryKey,
+    commentId: comment.id,
+  });
 
   const onUpdate = () => {
     if (password !== editPassword) {
@@ -35,7 +41,12 @@ const Comment = ({ comment }: { comment: CommentType }) => {
   };
 
   const onDelete = () => {
+    if (password !== editPassword) {
+      setIsEdit(false);
+      return alert("비밀번호가 다릅니다.");
+    }
     deleteComment(comment.id);
+    setIsEdit(false);
   };
 
   const onKeyUp = (e: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -47,7 +58,7 @@ const Comment = ({ comment }: { comment: CommentType }) => {
   return (
     <div className="bg-header mb-3 rounded p-3">
       {isEdit ? (
-        <div className="flex-column gap-3 bg-header my-3 p-5">
+        <div className="flex-column gap-3 bg-header my-3 py-5 px-2">
           <div className="w-full flex flex-row gap-2">
             <input
               className="flex-1 bg-transparent border border-white rounded p-1"
@@ -71,25 +82,34 @@ const Comment = ({ comment }: { comment: CommentType }) => {
             onKeyUp={onKeyUp}
             placeholder="작성내용"
           />
-          <div className="flex justify-end">
-            <button className="bg-primary px-2 rounded font-bold" onClick={onUpdate}>
+          <div className="flex justify-end gap-2">
+            <button
+              className="bg-primary px-2 rounded font-bold"
+              onClick={onUpdate}
+            >
               수정
+            </button>
+            <button
+              className="bg-primary px-2 rounded font-bold"
+              onClick={onDelete}
+            >
+              삭제
             </button>
           </div>
         </div>
       ) : (
-        <div>
+        <div className="px-2">
           <div className="flex flex-row justify-between">
             <div className="flex flex-row gap-2">
               <div className="font-bold">{comment.name}</div>
               <div className="text-date">{getDate(comment.created_at)}</div>
             </div>
             <div className="flex gap-2">
-              <button className="bg-primary px-2 rounded font-bold" onClick={() => setIsEdit(true)}>
-                수정
-              </button>
-              <button className="bg-primary px-2 rounded font-bold" onClick={onDelete}>
-                삭제
+              <button
+                className="bg-primary px-2 rounded font-bold"
+                onClick={() => setIsEdit(true)}
+              >
+                수정 / 삭제
               </button>
             </div>
           </div>
