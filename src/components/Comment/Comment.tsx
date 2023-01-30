@@ -36,8 +36,12 @@ const Comment = ({ comment }: { comment: CommentType }) => {
       id: comment.id,
       data: { name: editName, content: editContent },
     };
-    updateComment(commentData);
-    setIsEdit(false);
+    let check = window.confirm("수정하시겠습니까");
+    if (check) {
+      updateComment(commentData);
+      setIsEdit(false);
+      alert("수정되었습니다.");
+    }
   };
 
   const onDelete = () => {
@@ -45,8 +49,12 @@ const Comment = ({ comment }: { comment: CommentType }) => {
       setIsEdit(false);
       return alert("비밀번호가 다릅니다.");
     }
-    deleteComment(comment.id);
-    setIsEdit(false);
+    let check = window.confirm("삭제하시겠습니까");
+    if (check) {
+      deleteComment(comment.id);
+      setIsEdit(false);
+      alert("삭제되었습니다.");
+    }
   };
 
   const onKeyUp = (e: KeyboardEvent<HTMLTextAreaElement>) => {
